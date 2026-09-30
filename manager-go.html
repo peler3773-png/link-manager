@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manager go v3.2</title>
+<style>
+:root {
+  --hitam: #000000;
+  --hitam-lembut: #1a1a1a;
+  --emas: #d4af37;
+  --emas-terang: #f0c808;
+  --emas-gelap: #b8962c;
+  --kuning: #ffd700;
+  --merah: #ff2222;
+  --putih: #ffffff;
+  --abu: #2a2a2a;
+  --batas: #333333;
+}
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+  padding: 15px;
+  margin: 0;
+  min-height: 100vh;
+}
+.box {
+  max-width: 900px;
+  margin: auto;
+  background: var(--hitam-lembut);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(212,175,55,0.25);
+  border: 1px solid var(--emas);
+}
+h3 {
+  color: var(--emas);
+  margin-top: 0;
+  border-bottom: 2px solid var(--emas);
+  padding-bottom: 15px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+label {
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--emas);
+  display: block;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid var(--batas);
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 14px;
+  background: var(--abu);
+  color: var(--putih);
+}
+input:focus {
+  outline: none;
+  border-color: var(--emas);
+  box-shadow: 0 0 0 2px rgba(212,175,55,0.3);
+}
+button {
+  background: linear-gradient(180deg, var(--emas-terang) 0%, var(--emas-gelap) 100%);
+  color: var(--hitam);
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  font-size: 16px;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+button:hover {
+  background: linear-gradient(180deg, var(--kuning) 0%, var(--emas-terang) 100%);
+  transform: translateY(-1px);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+}
+th {
+  background: var(--abu);
+  padding: 15px 10px;
+  text-align: left;
+  border-bottom: 2px solid var(--emas);
+  font-size: 13px;
+  color: var(--emas);
+  text-transform: uppercase;
+}
+td {
+  padding: 15px 10px;
+  border-bottom: 1px solid var(--batas);
+  vertical-align: middle;
+  color: var(--putih);
+}
+.nama-full {
+  font-weight: bold;
+  color: var(--emas);
+  font-size: 15px;
+  display: block;
+  margin-bottom: 5px;
+}
+.link-container {
+  display: inline-block;
+  background: rgba(212,175,55,0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--emas);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.link-container:hover {
+  background: rgba(212,175,55,0.2);
+}
+.nama-file {
+  color: var(--emas-terang);
+  font-size: 14px;
+  font-family: monospace;
+  font-weight: bold;
+}
+.badge-ref {
+  background: var(--emas);
+  color: var(--hitam);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+}
+.btn-edit {
+  display: inline-block;
+  background: var(--kuning);
+  color: #000000;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 10px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-edit:hover {
+  background: #fff100;
+  transform: scale(1.05);
+}
+.btn-del {
+  display: inline-block;
+  background: var(--merah);
+  color: #000000;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-del:hover {
+  background: #ff4444;
+  transform: scale(1.05);
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+.info-box {
+  background: rgba(212,175,55,0.1);
+  border: 1px solid var(--emas);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 15px;
+  font-size: 13px;
+  color: var(--emas-terang);
+}
+</style>
+</head>
+<body>
+<div class="box">
+  <h3>📁 MANAGER /GO (v3.2)</h3>
+  <div class="info-box">
+    📂 Data dimuat dari: <code>data/links.json</code> — tambah/edit link langsung di file itu saja
+  </div>
+  <form id="formEntry">
+    <input type="hidden" id="editMode" value="">
+    <div class="grid">
+      <div>
+        <label>NAMA FILE</label>
+        <input type="text" id="web" placeholder="3pr" required>
+      </div>
+      <div>
+        <label>NAMA TAMPILAN</label>
+        <input type="text" id="nama_full" placeholder="3PRIZE TOTO" required>
+      </div>
+    </div>
+    <label>DOMAIN TARGET (Paste domain saja, otomatis ke /wap/register.html)</label>
+    <input type="text" id="url" value="tautan.planetgroup.biz" placeholder="ta.viralgratis.cc" required>
+    <div class="grid">
+      <div>
+        <label>KODE REF</label>
+        <input type="text" id="ref" placeholder="teamwlatoto">
+      </div>
+      <div>
+        <button type="submit">SIMPAN & UPDATE</button>
+      </div>
+    </div>
+  </form>
+  <table id="linkTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nama & Link</th>
+        <th>Ref</th>
+        <th style="text-align:center">Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="listBody">
+      <tr><td colspan="4" style="text-align:center;color:#999">Memuat data...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+let entries = [];
+
+async function loadData(){
+  try {
+    const res = await fetch('./data/links.json?v=' + Date.now());
+    if(!res.ok) throw new Error('File tidak ditemukan');
+    entries = await res.json();
+    entries.sort((a,b)=>a.web.localeCompare(b.web));
+    render();
+  } catch(err) {
+    document.getElementById('listBody').innerHTML = `
+      <tr><td colspan="4" style="text-align:center;color:#ff6666">
+        ⚠️ Gagal ambil data: ${err.message}<br>
+        Pastikan folder <b>data/links.json</b> sudah dibuat di repo
+      </td></tr>`;
+  }
+}
+
+function render(){
+  const tBody = document.getElementById('listBody');
+  tBody.innerHTML = '';
+  entries.forEach((e,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:#666;font-weight:bold">${i+1}</td>
+      <td>
+        <span class="nama-full">${e.nama}</span>
+        <a href="https://${e.domain}/go/${e.web}.php" target="_blank" class="link-container">
+          <span class="nama-file">https://${e.domain}/go/${e.web}.php</span>
+        </a>
+      </td>
+      <td><span class="badge-ref">${e.ref}</span></td>
+      <td style="text-align:center">
+        <a href="#" class="btn-edit" data-idx="${i}">EDIT</a>
+        <a href="#" class="btn-del" data-idx="${i}">HAPUS</a>
+      </td>`;
+    tBody.appendChild(tr);
+  });
+  attachEvents();
+}
+
+function attachEvents(){
+  document.querySelectorAll('.btn-edit').forEach(btn=>{
+    btn.onclick=ev=>{
+      ev.preventDefault();
+      const idx = parseInt(ev.target.dataset.idx);
+      const e = entries[idx];
+      document.getElementById('web').value = e.web;
+      document.getElementById('nama_full').value = e.nama;
+      document.getElementById('url').value = e.domain;
+      document.getElementById('ref').value = e.ref;
+      document.getElementById('editMode').value = idx;
+    };
+  });
+  document.querySelectorAll('.btn-del').forEach(btn=>{
+    btn.onclick=ev=>{
+      ev.preventDefault();
+      if(confirm('Hapus?')){
+        entries.splice(parseInt(ev.target.dataset.idx),1);
+        render();
+      }
+    };
+  });
+}
+
+document.getElementById('formEntry').onsubmit=ev=>{
+  ev.preventDefault();
+  const web = document.getElementById('web').value.trim();
+  const nama = document.getElementById('nama_full').value.trim();
+  const dom = document.getElementById('url').value.trim();
+  const ref = document.getElementById('ref').value.trim();
+  const editIdx = document.getElementById('editMode').value;
+  
+  if(editIdx!==''){
+    entries[parseInt(editIdx)] = {web, nama, domain:dom, ref};
+    document.getElementById('editMode').value='';
+  }else{
+    entries.push({web, nama, domain:dom, ref});
+  }
+  
+  entries.sort((a,b)=>a.web.localeCompare(b.web));
+  render();
+  
+  alert('✅ Data diperbarui!\n\nSalin teks di bawah ini ke file data/links.json:\n\n' + JSON.stringify(entries,null,2));
+  
+  document.getElementById('web').value='';
+  document.getElementById('nama_full').value='';
+  document.getElementById('url').value='tautan.planetgroup.biz';
+  document.getElementById('ref').value='';
+};
+
+loadData();
+</script>
+</body>
+</html>
